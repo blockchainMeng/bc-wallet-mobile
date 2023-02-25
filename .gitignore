@@ -42,3 +42,7 @@ app/patches/*.patch
 # xcode
 xcuserdata/
 .npmrc
+
+# yarn
+**/.yarn/cache
+.yarn/install-state.gz

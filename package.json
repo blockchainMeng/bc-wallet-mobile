@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)",
   "main": "index.js",
+  "engines": {
+    "node": ">=16.15.0 <18.0.0",
+    "yarn": "^3.3.1"
+  },
   "scripts": {
-    "install:bifold": "cd bifold/core && yarn install --frozen-lockfile",
-    "install:app": "cd app && npm ci",
-    "install:all": "run-s install:bifold install:app",
-    "build:bifold": "cd bifold/core && yarn typecheck && yarn prepack",
-    "build:app": "cd app && npm run typecheck && npm run prepack --if-present",
+    "install:bifold": "",
+    "build:bifold": "yarn workspace aries-bifold run typecheck && yarn workspace aries-bifold run prepack",
+    "build:app": "yarn workspace bcwallet-app run patch && yarn workspace bcwallet-app run typecheck",
     "build:all": "run-s build:bifold build:app",
-    "prepare": "run-s install:all build:all",
+    "preinstall": "run-s install:bifold build:all",
     "lint:app": "cd app && npm run lint --if-present",
     "lint": "run-s lint:app",
     "prettier:app": "cd app && npm run prettier --if-present",
@@ -30,7 +32,24 @@
     "url": "https://github.com/bcgov/bc-wallet-mobile/issues"
   },
   "homepage": "https://github.com/bcgov/bc-wallet-mobile#readme",
+  "workspaces": {
+    "packages": [
+      "app",
+      "bifold-core"
+    ]
+  },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
-  }
+  },
+  "resolutions": {
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2",
+    "@react-navigation/core": "6.1.0",
+    "@react-navigation/native": "6.0.6",
+    "@react-navigation/stack": "6.0.11",
+    "@types/node": "16.9.6",
+    "@aries-framework/core": "0.3.3",
+    "did-resolver": "3.1.5"
+  },
+  "packageManager": "yarn@3.3.1"
 }
