@@ -1,3 +1,4 @@
+import { useAgent, useConnections } from '@aries-framework/react-hooks'
 import { useNavigation } from '@react-navigation/core'
 import {
   Stacks,
@@ -19,9 +20,11 @@ import {
 } from 'aries-bifold'
 import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Linking, StatusBar } from 'react-native'
+import { Linking, StatusBar, View, Button, TextInput } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import Toast from 'react-native-toast-message'
+
+import { connectFromInvitation } from '../bifold/core/App/utils/helpers'
 
 import bcwallet from './src'
 import { initialState, reducer } from './src/store'
@@ -40,6 +43,62 @@ const App = () => {
   const { navigate } = useNavigation()
 
   const helpLink = 'https://www2.gov.bc.ca/gov/content/governments/government-id/bc-wallet/help'
+
+  const SendMessageComponent = () => {
+    const { records } = useConnections();
+    const agentInstance = useAgent();
+
+    const handleSendMessage = async () => {
+      if (records && records.length > 0) {
+        const connectionId = records[0].id;
+        const message = "Hello! This is a test message.";
+        if (agentInstance) {
+          // TODO fix this, lots of errors
+          await agentInstance.agent?.basicMessages.sendMessage(connectionId, message);
+        } else {
+          console.error("Agent not initialized.");
+        }
+      }
+    };
+
+    return (
+      <View>
+        <Button title="Send Test Message" onPress={handleSendMessage} />
+      </View>
+    );
+  };
+
+  const ConnectFromUriComponent = () => {
+    const [invitationUri, setInvitationUri] = useState('');
+    const agentInstance = useAgent();
+  
+    const handleConnect = async () => {
+      try {
+        if (invitationUri && agentInstance) {
+          const connectionRecord = await connectFromInvitation(invitationUri, agentInstance.agent);
+          console.log('Connection established:', connectionRecord);
+        } else {
+          console.error('Invalid invitation URI or agent not initialized.');
+        }
+      } catch (error) {
+        console.error('Error connecting from invitation:', error);
+      }
+    };
+  
+    return (
+      <View>
+        <TextInput
+          onChangeText={setInvitationUri}
+          value={invitationUri}
+          placeholder="Enter invitation URI"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <Button title="Connect" onPress={handleConnect} />
+      </View>
+    );
+  };
+
 
   const settings = [
     {
@@ -103,6 +162,10 @@ const App = () => {
                 <ErrorModal />
                 <RootStack />
                 <Toast topOffset={15} config={toastConfig} />
+                <View>
+                 <SendMessageComponent />
+                 <ConnectFromUriComponent />
+                </View>
               </NetworkProvider>
             </AuthProvider>
           </ConfigurationProvider>
