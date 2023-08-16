@@ -20,7 +20,7 @@ import {
 } from 'aries-bifold'
 import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Linking, StatusBar, View, Button, TextInput } from 'react-native'
+import { Linking, StatusBar, View, Button, TextInput,Text, NativeModules } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import Toast from 'react-native-toast-message'
 
@@ -30,10 +30,10 @@ import bcwallet from './src'
 import { initialState, reducer } from './src/store'
 
 const { theme, localization, configuration } = bcwallet
-
+const { APIModule } = NativeModules;
 initLanguages(localization)
 
-const App = () => {
+const App = ({android_input}:any) => {
   useMemo(() => {
     initStoredLanguage().then()
   }, [])
@@ -99,6 +99,43 @@ const App = () => {
     );
   };
 
+  const MessageFromAndroidComponent  = ({ android_input }:any) => {
+    const { records } = useConnections();
+    const agentInstance = useAgent();
+    const [messageStatus, setMessageStatus] = useState(""); // State to keep track of message status.
+  
+    const handleSendMessage = async () => {
+      if (records && records.length > 0) {
+        const connectionId = records[0].id;
+        const message = android_input;
+        if (agentInstance) {
+          try {
+            await agentInstance.agent?.basicMessages.sendMessage(connectionId, message);
+            setMessageStatus("Message sent successfully!"); // Update the status if message is sent.
+          } catch(error) {
+            console.error("Failed to send message.", error);
+            setMessageStatus("Failed to send message."); // Update the status if sending fails.
+          }
+        } else {
+          console.error("Agent not initialized.");
+          setMessageStatus("Agent not initialized."); // Update the status if agent is not initialized.
+        }
+      }
+    };
+  
+    useEffect(() => {
+      if (android_input) { // Check if android_input is not null or empty.
+        handleSendMessage();
+      }
+    }, [android_input]); // Only run the effect when android_input changes.
+  
+    return (
+      <View>
+        <Text>{String(android_input)}</Text>
+        <Text>Status: {messageStatus}</Text> {/* Display the status message. */}
+      </View>
+    );
+  }
 
   const settings = [
     {
@@ -163,6 +200,7 @@ const App = () => {
                 <RootStack />
                 <Toast topOffset={15} config={toastConfig} />
                 <View>
+                 <MessageFromAndroidComponent android_input={android_input} />
                  <SendMessageComponent />
                  <ConnectFromUriComponent />
                 </View>
