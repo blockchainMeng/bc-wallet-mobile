@@ -88,7 +88,7 @@ public class MainActivity extends ReactActivity implements DefaultHardwareBackBt
               .setUseDeveloperSupport(BuildConfig.DEBUG)
               .setInitialLifecycleState(LifecycleState.RESUMED)
               .build();
-      mReactRootView.startReactApplication(mReactInstanceManager, "BCWallet", null);
+      mReactRootView.startReactApplication(mReactInstanceManager, "CrossPlatformAppV65", null);
       bottom.addView(mReactRootView);
   }
 
