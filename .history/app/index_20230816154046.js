@@ -45,13 +45,11 @@ const navigationTheme = {
 }
 
 const MyApp = ({ android_input }) => {
-  console.log("android_input value:", android_input)
   return (
     
       <>
           <View>
-          {android_input && typeof android_input === 'string' ? <Text>{String(android_input)}</Text> : null}
-
+              <Text>Android says: {android_input}</Text>
           </View>
           <NavigationContainer theme={navigationTheme}>
               <App android_input={android_input} />

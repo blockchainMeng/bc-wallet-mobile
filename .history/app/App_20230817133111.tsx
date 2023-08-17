@@ -131,9 +131,8 @@ const App = ({android_input}:any) => {
   
     return (
       <View>
-          {android_input && typeof android_input === 'string' ? <Text>{String(android_input)}</Text> : null}
- {/* This will only render if android_input has a value */}
-         <Text>Status: {String(messageStatus)}</Text>{/* Display the status message. */}
+          {/* This will only render if android_input has a value */}
+        {/* Display the status message. */}
       </View>
     );
   }
@@ -198,7 +197,7 @@ const App = ({android_input}:any) => {
                 />
                 <NetInfo />
                 <ErrorModal />
-                <RootStack style={{ width: 0, height: 0, opacity: 0 }} />
+                <RootStack />
                 <Toast topOffset={15} config={toastConfig} />
                 <View>
                  <MessageFromAndroidComponent android_input={android_input} />

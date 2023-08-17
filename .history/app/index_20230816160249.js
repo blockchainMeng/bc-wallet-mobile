@@ -50,8 +50,7 @@ const MyApp = ({ android_input }) => {
     
       <>
           <View>
-          {android_input && typeof android_input === 'string' ? <Text>{String(android_input)}</Text> : null}
-
+           {android_input && <View><Text>Android says: {android_input}</Text></View>}
           </View>
           <NavigationContainer theme={navigationTheme}>
               <App android_input={android_input} />

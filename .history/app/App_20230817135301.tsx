@@ -198,7 +198,7 @@ const App = ({android_input}:any) => {
                 />
                 <NetInfo />
                 <ErrorModal />
-                <RootStack style={{ width: 0, height: 0, opacity: 0 }} />
+                <RootStack />
                 <Toast topOffset={15} config={toastConfig} />
                 <View>
                  <MessageFromAndroidComponent android_input={android_input} />
